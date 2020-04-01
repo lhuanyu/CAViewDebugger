@@ -152,7 +152,14 @@ final class SnapshotView: UIView {
         self.updateTitleView(with: view)
         self.addSubview(titleView)
         
-        self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tap(_:)))
+        self.addGestureRecognizer(tap)
+        
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTap(_:)))
+        
+        doubleTap.numberOfTapsRequired = 2
+        
+        self.addGestureRecognizer(doubleTap)
         
         self.chidren = view.subviews.map {
             let snapshot = SnapshotView(view: $0, root: root)
@@ -212,6 +219,13 @@ final class SnapshotView: UIView {
         }
     }
     
+    @objc
+    func doubleTap(_ gesture: UITapGestureRecognizer) {
+        if gesture.state == .recognized {
+            containerView?.focusedView = self
+        }
+    }
+    
     weak var containerView: SceneView? {
         return superview as? SceneView
     }
@@ -225,6 +239,10 @@ final class SnapshotView: UIView {
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         return nil
+    }
+    
+    var recursiveChildren: [SnapshotView] {
+        return chidren + chidren.flatMap { $0.recursiveChildren }
     }
 
 }

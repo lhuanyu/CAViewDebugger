@@ -53,6 +53,7 @@ final class ViewDebuggerViewController: UIViewController {
             self?.containerView.visibleLevelsRange = $0
         }
         view.addSubview(spacingSlider)
+        spacingSlider.value = Float(containerView.layerSpacing)
     }
     
     required init?(coder: NSCoder) {

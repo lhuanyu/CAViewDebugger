@@ -22,6 +22,20 @@ final class SceneView: UIView {
         }
     }
     
+    var focusedView: SnapshotView? {
+        didSet {
+            if let view = focusedView {
+                focusedViews = Set(view.recursiveChildren)
+                focusedViews.insert(view)
+            } else {
+                focusedViews.removeAll(keepingCapacity: true)
+            }
+            updateVisibleLayers()
+        }
+    }
+
+    private var focusedViews = Set<SnapshotView>()
+    
     private(set) var rootSnapshotView: SnapshotView!
     
     init(window: UIWindow) {
@@ -47,7 +61,15 @@ final class SceneView: UIView {
         doublePan.minimumNumberOfTouches = 2
         addGestureRecognizer(doublePan)
         
-        addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(zoom)))
+        addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(zoom(_:))))
+        
+        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(deselect(_:))))
+        
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(loseFocus(_:)))
+        doubleTap.numberOfTapsRequired = 2
+        addGestureRecognizer(doubleTap)
+        
+        addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(longPress(_:))))
     }
     
     private(set) var maxLevel = CGFloat.zero
@@ -97,7 +119,7 @@ final class SceneView: UIView {
     }
     
     @objc
-    func strech(_ gesture: UIPanGestureRecognizer)  {
+    private func strech(_ gesture: UIPanGestureRecognizer)  {
         if gesture.state == .changed {
             let trans = gesture.translation(in: self)
             layerSpacing += trans.x
@@ -108,7 +130,7 @@ final class SceneView: UIView {
     }
     
     @objc
-    func rotate(_ gesture: UIPanGestureRecognizer)  {
+    private func rotate(_ gesture: UIPanGestureRecognizer)  {
         if gesture.state == .changed {
             let trans = gesture.translation(in: self)
             yRotation += trans.x * 0.01 * .pi
@@ -124,12 +146,46 @@ final class SceneView: UIView {
     }
         
     @objc
-    func zoom(_ gesture: UIPinchGestureRecognizer)  {
+    private func zoom(_ gesture: UIPinchGestureRecognizer)  {
         if gesture.state == .began {
             gesture.scale = scale
         } else if gesture.state == .changed {
             scale = gesture.scale
             transform()
+        }
+    }
+    
+    @objc
+    private func deselect(_ gestures: UITapGestureRecognizer) {
+        if gestures.state == .recognized {
+            if selectedView != nil {
+                selectedView = nil
+            }
+        }
+    }
+    
+    @objc
+    private func loseFocus(_ gestures: UITapGestureRecognizer) {
+        if gestures.state == .recognized {
+            if focusedView != nil {
+                focusedView = nil
+            }
+        }
+    }
+    
+    @objc
+    private func stopFocusing(_ gestures: UITapGestureRecognizer) {
+        if gestures.state == .recognized {
+            if selectedView != nil {
+                selectedView = nil
+            }
+        }
+    }
+    
+    @objc
+    private func longPress(_ gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .recognized {
+            
         }
     }
     
@@ -198,6 +254,20 @@ final class SceneView: UIView {
     private var layersMap = [[SnapshotView]()]
     var visibleLevelsRange = 0...0 {
         didSet {
+            updateVisibleLayers()
+        }
+    }
+    
+    private func updateVisibleLayers() {
+    
+        if let _ = focusedView {
+            for (level, snapshots) in layersMap.enumerated() {
+                let show = visibleLevelsRange.contains(level)
+                snapshots.forEach {
+                    $0.isHidden = !show || !focusedViews.contains($0)
+                }
+            }
+        } else {
             for (level, snapshots) in layersMap.enumerated() {
                 let show = visibleLevelsRange.contains(level)
                 snapshots.forEach {
@@ -205,13 +275,14 @@ final class SceneView: UIView {
                 }
             }
         }
+
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let visibleLayers = Array(self.layersMap[visibleLevelsRange])
         let layers = normalVector.z > 0 ? visibleLayers.reversed() : visibleLayers
         for layer in layers {
-            for snapshot in layer {
+            for snapshot in layer where !snapshot.isHidden {
                 let pt = snapshot.convert(point, from: self)
                 if snapshot.point(inside: pt, with: event) {
                     return snapshot
