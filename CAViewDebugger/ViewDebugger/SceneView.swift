@@ -84,7 +84,7 @@ final class SceneView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private(set) var layerSpacing = CGFloat(25.0)
+    var layerSpacing = CGFloat(25.0)
     private(set) var zPosition = CGFloat.zero
     private(set) var yRotation: CGFloat = .pi / 3
     private(set) var xRotation: CGFloat = -.pi * 0.2
@@ -136,6 +136,10 @@ final class SceneView: UIView {
     private func transform() {
         updateSceneTransform3D()
         layoutSnapshots()
+    }
+    
+    func update() {
+        transform()
     }
     
     private func updateSceneTransform3D() {

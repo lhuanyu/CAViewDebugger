@@ -15,11 +15,24 @@ final class ViewDebuggerViewController: UIViewController {
     private lazy var rangeSlider: RangeSlider = {
         let slider = RangeSlider(range: 0...Int(self.containerView.maxLevel))
         slider.frame = CGRect(x: 10,
-                              y: self.view.bounds.height - 80,
+                              y: self.view.bounds.height - 162,
                               width: self.view.bounds.width - 20,
-                              height: 62)
+                              height: 40)
         slider.autoresizingMask = [.flexibleTopMargin, .flexibleWidth]
-        slider.layer.zPosition = 2000
+        slider.layer.zPosition = 20000
+        return slider
+    }()
+    
+    private lazy var spacingSlider: UISlider = {
+        let slider = UISlider(frame: CGRect(x: 10,
+                                            y: self.view.bounds.height - 100,
+                                            width: self.view.bounds.width - 20,
+                                            height: 62))
+        slider.maximumValue = 200
+        slider.minimumValue = 1
+        slider.addTarget(self, action: #selector(spacingSliderDidChange(_:)), for: .valueChanged)
+        slider.autoresizingMask = [.flexibleTopMargin, .flexibleWidth]
+        slider.layer.zPosition = 20000
         return slider
     }()
     
@@ -39,6 +52,7 @@ final class ViewDebuggerViewController: UIViewController {
         rangeSlider.didChange = { [weak self] in
             self?.containerView.visibleLevelsRange = $0
         }
+        view.addSubview(spacingSlider)
     }
     
     required init?(coder: NSCoder) {
@@ -71,6 +85,12 @@ final class ViewDebuggerViewController: UIViewController {
         containerView.resetCamera { [weak self] finished in
             self?.dismiss(animated: true, completion: nil)
         }
+    }
+    
+    @objc
+    func spacingSliderDidChange(_ sender: UISlider) {
+        containerView.layerSpacing = CGFloat(sender.value)
+        containerView.update()
     }
     
     override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
