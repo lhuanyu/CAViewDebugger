@@ -15,9 +15,10 @@ final class ViewDebuggerViewController: UIViewController {
     private lazy var rangeSlider: RangeSlider = {
         let slider = RangeSlider(range: 0...Int(self.containerView.maxLevel))
         slider.frame = CGRect(x: 10,
-                              y: self.view.bounds.height - 100,
+                              y: self.view.bounds.height - 80,
                               width: self.view.bounds.width - 20,
                               height: 62)
+        slider.autoresizingMask = [.flexibleTopMargin, .flexibleWidth]
         slider.layer.zPosition = 2000
         return slider
     }()
@@ -32,6 +33,7 @@ final class ViewDebuggerViewController: UIViewController {
         self.view.backgroundColor = #colorLiteral(red: 0.8820094466, green: 0.8900626302, blue: 0.9024230838, alpha: 1)
         self.view.addSubview(containerView)
         containerView.frame = self.view.bounds
+        containerView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         
         view.addSubview(rangeSlider)
         rangeSlider.didChange = { [weak self] in
