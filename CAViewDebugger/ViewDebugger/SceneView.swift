@@ -9,16 +9,24 @@
 import UIKit
 import simd
 
+protocol SceneViewDelgate: class {
+    func sceneView(_ view: SceneView, didSelect snapshot: SnapshotView?)
+    func sceneView(_ view: SceneView, didFocus snapshot: SnapshotView?)
+}
+
 final class SceneView: UIView {
     
     override class var layerClass: AnyClass {
         return CATransformLayer.self
     }
     
+    weak var delegate: SceneViewDelgate?
+    
     var selectedView: SnapshotView? {
         didSet {
             oldValue?.selected = false
             selectedView?.selected = true
+            delegate?.sceneView(self, didSelect: selectedView)
         }
     }
     
@@ -31,6 +39,7 @@ final class SceneView: UIView {
                 focusedViews.removeAll(keepingCapacity: true)
             }
             updateVisibleLayers()
+            delegate?.sceneView(self, didFocus: focusedView)
         }
     }
 

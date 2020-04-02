@@ -11,6 +11,21 @@ import UIKit
 final class ViewDebuggerViewController: UIViewController {
     
     let containerView: SceneView!
+    
+    private lazy var basicInfoButton: UIButton = {
+        let button = UIButton(type: .custom)
+        var top = CGFloat.zero
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 10)
+        button.backgroundColor = .white
+        button.isHidden = true
+        button.imageEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        button.imageView?.contentMode = .scaleAspectFit
+        button.layer.zPosition = 20000
+
+        return button
+    }()
 
     private lazy var rangeSlider: RangeSlider = {
         let slider = RangeSlider(range: 0...Int(self.containerView.maxLevel))
@@ -47,6 +62,7 @@ final class ViewDebuggerViewController: UIViewController {
         self.view.addSubview(containerView)
         containerView.frame = self.view.bounds
         containerView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        containerView.delegate = self
         
         view.addSubview(rangeSlider)
         rangeSlider.didChange = { [weak self] in
@@ -54,6 +70,19 @@ final class ViewDebuggerViewController: UIViewController {
         }
         view.addSubview(spacingSlider)
         spacingSlider.value = Float(containerView.layerSpacing)
+        view.addSubview(basicInfoButton)
+        
+        if #available(iOS 11.0, *) {
+            basicInfoButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+            basicInfoButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+            basicInfoButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
+            basicInfoButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        } else {
+            basicInfoButton.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+            basicInfoButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+            basicInfoButton.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+            basicInfoButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -96,6 +125,35 @@ final class ViewDebuggerViewController: UIViewController {
     
     override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
         return .portrait
+    }
+    
+    
+}
+
+
+extension ViewDebuggerViewController: SceneViewDelgate {
+    
+    func sceneView(_ view: SceneView, didSelect snapshot: SnapshotView?) {
+        if let snapshot = snapshot {
+            basicInfoButton.setImage(snapshot.originalView.payloadIcon, for: .normal)
+            basicInfoButton.setTitle("\(type(of: snapshot.originalView))  " + snapshot.frame.oneDigitDescription, for: .normal)
+            basicInfoButton.isHidden = false
+        } else {
+            basicInfoButton.isHidden = true
+        }
+    }
+    
+    func sceneView(_ view: SceneView, didFocus snapshot: SnapshotView?) {
+        
+    }
+    
+    
+}
+
+extension CGRect {
+    
+    var oneDigitDescription: String {
+        return String(format: "(%.1f, %.1f, %.1f, %.1f)", origin.x, origin.y, width, height)
     }
     
 }

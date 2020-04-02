@@ -13,7 +13,7 @@ protocol Snapshotable {
 }
 
 extension UIView: Snapshotable {
-
+    
     private func draw() -> CGImage? {
         UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0)
         drawHierarchy(in: bounds, afterScreenUpdates: true)
@@ -21,7 +21,7 @@ extension UIView: Snapshotable {
         UIGraphicsEndImageContext()
         return image?.cgImage
     }
-
+    
     private func hideViewsOnTopOf(view: UIView, root: UIView, hiddenViews: inout [UIView]) -> Bool {
         if root == view {
             return true
@@ -41,7 +41,7 @@ extension UIView: Snapshotable {
         }
         return foundView
     }
-
+    
     private func snapshotVisualEffectBackdropView(_ view: UIView) -> CGImage? {
         guard let window = view.window else {
             return nil
@@ -50,7 +50,7 @@ extension UIView: Snapshotable {
         defer {
             hiddenViews.forEach { $0.isHidden = false }
         }
-
+        
         if hideViewsOnTopOf(view: view, root: window, hiddenViews: &hiddenViews) {
             let image = window.draw()
             let cropRect = window.convert(view.bounds, from: view)
@@ -58,7 +58,7 @@ extension UIView: Snapshotable {
         }
         return nil
     }
-
+    
     func snapshot() -> CGImage? {
         if let superview = self.superview, let _ = superview as? UIVisualEffectView,
             superview.subviews.first == self {
@@ -84,16 +84,16 @@ extension UIView: Snapshotable {
 final class SnapshotView: UIView {
     
     weak var root: UIView!
-    var originalView: UIView!
+    var originalView = UIView()
     var chidren = [SnapshotView]()
     var normalFrame = CGRect.zero
     var visibleBounds = CGRect.zero
     var visibleFrame = CGRect.zero
     var level: CGFloat = 0 {
         didSet {
-            if let text = titleView.titleLabel?.text {
-                titleView.setTitle(text + ( "(level: \(Int(level)))"), for: .normal)
-            }
+//            if let text = titleView.titleLabel?.text {
+//                titleView.setTitle(text + ( "(level: \(Int(level)))"), for: .normal)
+//            }
         }
     }
     
@@ -103,11 +103,15 @@ final class SnapshotView: UIView {
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 10)
         button.isUserInteractionEnabled = false
+        
         let frame = CGRect(x: self.visibleFrame.origin.x,
-                                  y: self.visibleFrame.origin.y - 21,
-                                  width: self.visibleFrame.width,
-                                  height: 19)
+                           y: self.visibleFrame.origin.y - 21,
+                           width: self.visibleFrame.width,
+                           height: 19)
         button.frame = self.convert(frame, from: self.root)
+        button.imageEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        button.imageView?.contentMode = .scaleAspectFit
+        button.setImage(self.originalView.payloadIcon, for: .normal)
         return button
     }()
     
@@ -124,9 +128,9 @@ final class SnapshotView: UIView {
         } else {
             self.normalFrame = root.convert(view.frame, from: view.superview)
         }
-             
+        
         self.frame = normalFrame
-
+        
         if let superview = superview, superview.clipsToBounds {
             let frame = superview.bounds.intersection(view.frame)
             self.visibleFrame = root.convert(frame, from: superview)
@@ -146,9 +150,9 @@ final class SnapshotView: UIView {
         } else {
             self.visibleBounds = bounds.inset(by: insets)
         }
-
+        
         self.addBorder()
-
+        
         self.updateTitleView(with: view)
         self.addSubview(titleView)
         
@@ -191,7 +195,7 @@ final class SnapshotView: UIView {
             titleView.isHidden = false
         }
     }
-        
+    
     override init(frame: CGRect) {
         fatalError("Do not call this method directly.")
     }
@@ -199,7 +203,7 @@ final class SnapshotView: UIView {
     required init?(coder: NSCoder) {
         fatalError("Do not call this method directly.")
     }
-
+    
     var selected: Bool = false {
         didSet {
             if selected {
@@ -236,7 +240,7 @@ final class SnapshotView: UIView {
         }
         return false
     }
-
+    
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         return nil
     }
@@ -244,13 +248,26 @@ final class SnapshotView: UIView {
     var recursiveChildren: [SnapshotView] {
         return chidren + chidren.flatMap { $0.recursiveChildren }
     }
-
+    
 }
 
 enum PayloadType {
     case window
     case controller(String)
     case view
+    
+    
+    var icon: UIImage? {
+        switch self {
+        case .window:
+            return nil
+        case .controller(_):
+            return UIImage(named: "UIViewController")
+        case .view:
+            return UIImage(named: "UIView")
+        }
+    }
+    
 }
 
 extension UIView {
@@ -277,6 +294,17 @@ extension UIView {
         }
         
         return .view
+    }
+    
+    var payloadIcon: UIImage? {
+        switch self.payload {
+        case .window:
+            return nil
+        case .controller(_):
+            return UIImage(named: "UIViewController")
+        case .view:
+            return UIImage(named: "\(type(of: self))") ?? UIImage(named: "UIView")
+        }
     }
     
 }

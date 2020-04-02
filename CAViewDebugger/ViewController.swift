@@ -50,7 +50,8 @@ class ViewController: UIViewController {
         view5.backgroundColor = UIColor.systemRed.withAlphaComponent(0.5)
         view5.frame = frames2.slice
         
-        let view6 = UIView()
+        let view6 = UIImageView(image: UIImage(named: "UIImageView"))
+        view6.contentMode = .scaleAspectFit
         view6.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         view6.frame = frames2.remainder
         
