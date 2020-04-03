@@ -194,6 +194,13 @@ final class SnapshotView: UIView {
             titleView.setTitle("\(type(of: view))", for: .normal)
             titleView.isHidden = false
         }
+        
+        if let width = titleView.titleLabel?.sizeThatFits(.init(width: CGFloat.greatestFiniteMagnitude, height: 12)).width {
+            if width + 40 > bounds.width {
+                titleView.frame.size.width = width + 40
+                titleView.center.x = bounds.width * 0.5
+            }
+        }
     }
     
     override init(frame: CGRect) {
@@ -235,7 +242,7 @@ final class SnapshotView: UIView {
     }
     
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        if visibleBounds.contains(point) {
+        if visibleBounds.contains(point) || titleView.frame.contains(point) {
             return true
         }
         return false

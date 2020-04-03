@@ -183,15 +183,6 @@ final class SceneView: UIView {
     }
     
     @objc
-    private func stopFocusing(_ gestures: UITapGestureRecognizer) {
-        if gestures.state == .recognized {
-            if selectedView != nil {
-                selectedView = nil
-            }
-        }
-    }
-    
-    @objc
     private func longPress(_ gesture: UILongPressGestureRecognizer) {
         if gesture.state == .recognized {
             
