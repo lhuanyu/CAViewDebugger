@@ -29,24 +29,24 @@ final class ViewDebuggerViewController: UIViewController {
 
     private lazy var rangeSlider: RangeSlider = {
         let slider = RangeSlider(range: 0...Int(self.containerView.maxLevel))
-        slider.frame = CGRect(x: 10,
-                              y: self.view.bounds.height - 162,
-                              width: self.view.bounds.width - 20,
+        slider.frame = CGRect(x: self.view.bounds.width * 0.5,
+                              y: self.view.bounds.height - 80,
+                              width: self.view.bounds.width * 0.5 - 15,
                               height: 40)
-        slider.autoresizingMask = [.flexibleTopMargin, .flexibleWidth]
+        slider.autoresizingMask = [.flexibleTopMargin, .flexibleWidth, .flexibleLeftMargin]
         slider.layer.zPosition = 20000
         return slider
     }()
     
     private lazy var spacingSlider: UISlider = {
         let slider = UISlider(frame: CGRect(x: 10,
-                                            y: self.view.bounds.height - 100,
-                                            width: self.view.bounds.width - 20,
-                                            height: 62))
+                                            y: self.view.bounds.height - 80,
+                                            width: self.view.bounds.width * 0.5 - 15,
+                                            height: 40))
         slider.maximumValue = 200
         slider.minimumValue = 1
         slider.addTarget(self, action: #selector(spacingSliderDidChange(_:)), for: .valueChanged)
-        slider.autoresizingMask = [.flexibleTopMargin, .flexibleWidth]
+        slider.autoresizingMask = [.flexibleTopMargin, .flexibleWidth, .flexibleRightMargin]
         slider.layer.zPosition = 20000
         return slider
     }()
