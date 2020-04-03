@@ -186,14 +186,13 @@ final class SnapshotView: UIView {
         switch view.payload {
         case .window:
             titleView.isHidden = false
-            titleView.setTitle("\(type(of: view))", for: .normal)
-        case .controller(let name):
+        case .controller(_):
             titleView.isHidden = false
-            titleView.setTitle(name, for: .normal)
         case .view:
-            titleView.setTitle("\(type(of: view))", for: .normal)
             titleView.isHidden = false
         }
+        
+        titleView.setTitle(payloadName, for: .normal)
         
         if let width = titleView.titleLabel?.sizeThatFits(.init(width: CGFloat.greatestFiniteMagnitude, height: 12)).width {
             if width + 40 > bounds.width {
@@ -262,19 +261,6 @@ enum PayloadType {
     case window
     case controller(String)
     case view
-    
-    
-    var icon: UIImage? {
-        switch self {
-        case .window:
-            return nil
-        case .controller(_):
-            return UIImage(named: "UIViewController")
-        case .view:
-            return UIImage(named: "UIView")
-        }
-    }
-    
 }
 
 extension UIView {
@@ -301,6 +287,17 @@ extension UIView {
         }
         
         return .view
+    }
+    
+    var payloadName: String {
+        switch payload {
+        case .window:
+            return "\(type(of: self))"
+        case .controller(let name):
+            return name
+        case .view:
+            return "\(type(of: self))"
+        }
     }
     
     var payloadIcon: UIImage? {

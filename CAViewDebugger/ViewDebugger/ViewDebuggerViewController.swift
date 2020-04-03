@@ -94,7 +94,7 @@ final class ViewDebuggerViewController: UIViewController {
         let navigationController = UINavigationController(rootViewController: debuggerVC)
         navigationController.modalPresentationStyle = .overFullScreen
         navigationController.modalTransitionStyle = .crossDissolve
-        debuggerVC.title = "Snapshot"
+        debuggerVC.title = "\(type(of: window))"
 
 //        let item = UIBarButtonItem(title: "Settings", style: .done, target: debuggerVC, action: #selector(showSettings))
 //        debuggerVC.navigationItem.leftBarButtonItem = item
@@ -136,7 +136,7 @@ extension ViewDebuggerViewController: SceneViewDelgate {
     func sceneView(_ view: SceneView, didSelect snapshot: SnapshotView?) {
         if let snapshot = snapshot {
             basicInfoButton.setImage(snapshot.originalView.payloadIcon, for: .normal)
-            basicInfoButton.setTitle("\(type(of: snapshot.originalView))  " + snapshot.frame.oneDigitDescription, for: .normal)
+            basicInfoButton.setTitle(snapshot.originalView.payloadName + " " + snapshot.frame.oneDigitDescription, for: .normal)
             basicInfoButton.isHidden = false
         } else {
             basicInfoButton.isHidden = true
@@ -144,7 +144,7 @@ extension ViewDebuggerViewController: SceneViewDelgate {
     }
     
     func sceneView(_ view: SceneView, didFocus snapshot: SnapshotView?) {
-        
+        title = snapshot?.originalView.payloadName
     }
     
     
