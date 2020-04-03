@@ -147,7 +147,7 @@ extension ViewDebuggerViewController: SceneViewDelgate {
         if let snapshot = snapshot {
             title = snapshot.originalView.payloadName
         } else {
-            title = containerView.rootSnapshotView.originalView.payloadName
+            title = view.rootSnapshotView.originalView.payloadName
         }
     }
     

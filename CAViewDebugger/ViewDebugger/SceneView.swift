@@ -66,7 +66,7 @@ final class SceneView: UIView {
         singlePan.maximumNumberOfTouches = 1
         addGestureRecognizer(singlePan)
 
-        let doublePan = UIPanGestureRecognizer(target: self, action: #selector(strech(_:)))
+        let doublePan = UIPanGestureRecognizer(target: self, action: #selector(move(_:)))
         doublePan.minimumNumberOfTouches = 2
         addGestureRecognizer(doublePan)
         
@@ -116,6 +116,8 @@ final class SceneView: UIView {
     }
     
     var layerSpacing = CGFloat(25.0)
+    private(set) var xPosition = CGFloat.zero
+    private(set) var yPosition = CGFloat.zero
     private(set) var zPosition = CGFloat.zero
     private(set) var yRotation: CGFloat = .pi / 3
     private(set) var xRotation: CGFloat = -.pi * 0.2
@@ -128,11 +130,11 @@ final class SceneView: UIView {
     }
     
     @objc
-    private func strech(_ gesture: UIPanGestureRecognizer)  {
+    private func move(_ gesture: UIPanGestureRecognizer)  {
         if gesture.state == .changed {
             let trans = gesture.translation(in: self)
-            layerSpacing += trans.x
-            layerSpacing = max(1.0, layerSpacing)
+            xPosition += trans.x
+            yPosition += trans.y
             transform()
             gesture.setTranslation(.zero, in: self)
         }
@@ -203,7 +205,8 @@ final class SceneView: UIView {
         transform.m34 = -1 / 2000 * scale
         transform = CATransform3DRotate(transform, xRotation, 1, 0, 0)
         let rotate = CATransform3DRotate(transform, yRotation, 0, 1, 0)
-        layer.sublayerTransform = CATransform3DMakeScale(scale, scale, scale) + rotate
+        layer.anchorPoint = .init(x: 0.5 - xPosition / bounds.width, y: 0.5 - yPosition / bounds.height)
+        layer.sublayerTransform = CATransform3DMakeScale(scale, scale, scale) + rotate + CATransform3DMakeTranslation(xPosition, yPosition, 0)
     }
     
     private func layoutSnapshots() {
@@ -238,6 +241,7 @@ final class SceneView: UIView {
     }
     
     func resetCamera(compeletion:  ((Bool) -> Void)? = nil) {
+        layer.anchorPoint = .init(x: 0.5, y: 0.5)
         let animation = CABasicAnimation(keyPath: #keyPath(CALayer.sublayerTransform))
         animation.toValue = CATransform3DIdentity
         animation.duration = 0.3
