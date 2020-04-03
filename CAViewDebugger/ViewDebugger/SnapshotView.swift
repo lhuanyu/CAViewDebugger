@@ -192,7 +192,7 @@ final class SnapshotView: UIView {
             titleView.isHidden = false
         }
         
-        titleView.setTitle(payloadName, for: .normal)
+        titleView.setTitle(view.payloadName, for: .normal)
         
         if let width = titleView.titleLabel?.sizeThatFits(.init(width: CGFloat.greatestFiniteMagnitude, height: 12)).width {
             if width + 40 > bounds.width {
