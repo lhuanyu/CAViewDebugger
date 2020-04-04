@@ -61,6 +61,12 @@ For latest version:
 pod 'CAViewDebugger', :git => 'https://github.com/lhuanyu/CAViewDebugger.git'
 ```
 
+Cocoapod is not fully compatible with the new build system since Xcode 10 when intergated pods with assets([issue#8122](https://github.com/CocoaPods/CocoaPods/issues/8122#issuecomment-531202439)). If you find icons lost, try to add this line below to your podfile: 
+
+```ruby
+install! 'cocoapods', :disable_input_output_paths => true
+```
+
 ## Author
 
 lhuanyu, lhuany@gmail.com

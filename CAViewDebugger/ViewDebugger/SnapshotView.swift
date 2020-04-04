@@ -299,10 +299,18 @@ extension UIView {
         case .window:
             return nil
         case .controller(_):
-            return UIImage(named: "UIViewController")
+            return UIImage.bundleImage(named: "UIViewController")
         case .view:
-            return UIImage(named: "\(type(of: self))") ?? UIImage(named: "UIView")
+            return UIImage.bundleImage(named: "\(type(of: self))") ?? UIImage.bundleImage(named: "UIView")
         }
+    }
+    
+}
+
+extension UIImage {
+    
+    static func bundleImage(named name: String) -> UIImage? {
+        return UIImage(named: name, in: Bundle.init(for: SnapshotView.self), compatibleWith: nil)
     }
     
 }

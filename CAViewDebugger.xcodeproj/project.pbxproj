@@ -16,6 +16,7 @@
 		E44C2EB9242D861200D5F4B0 /* SnapshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C2EB8242D861200D5F4B0 /* SnapshotView.swift */; };
 		E44C2EBD242DE30100D5F4B0 /* ViewDebuggerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C2EBC242DE30100D5F4B0 /* ViewDebuggerViewController.swift */; };
 		E4BAAABD242F34B500082DA4 /* SceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BAAABC242F34B500082DA4 /* SceneView.swift */; };
+		E4BEE5C22438A55C00F46E0F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4BEE5C12438A55C00F46E0F /* Assets.xcassets */; };
 		E4F24A1424332A5F0058B109 /* RangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F24A1324332A5F0058B109 /* RangeSlider.swift */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +32,7 @@
 		E44C2EB8242D861200D5F4B0 /* SnapshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotView.swift; sourceTree = "<group>"; };
 		E44C2EBC242DE30100D5F4B0 /* ViewDebuggerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDebuggerViewController.swift; sourceTree = "<group>"; };
 		E4BAAABC242F34B500082DA4 /* SceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneView.swift; sourceTree = "<group>"; };
+		E4BEE5C12438A55C00F46E0F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E4F24A1324332A5F0058B109 /* RangeSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeSlider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -83,6 +85,7 @@
 				E4BAAABC242F34B500082DA4 /* SceneView.swift */,
 				E4F24A1324332A5F0058B109 /* RangeSlider.swift */,
 				E44C2EBC242DE30100D5F4B0 /* ViewDebuggerViewController.swift */,
+				E4BEE5C12438A55C00F46E0F /* Assets.xcassets */,
 			);
 			path = ViewDebugger;
 			sourceTree = "<group>";
@@ -147,6 +150,7 @@
 			files = (
 				E44C2EB1242CDAA700D5F4B0 /* LaunchScreen.storyboard in Resources */,
 				E44C2EAE242CDAA700D5F4B0 /* Assets.xcassets in Resources */,
+				E4BEE5C22438A55C00F46E0F /* Assets.xcassets in Resources */,
 				E44C2EAC242CDAA500D5F4B0 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
