@@ -1,5 +1,7 @@
 # CAViewDebugger
 
+![image](https://github.com/lhuanyu/CAViewDebugger/blob/master/doc/ScreenShot.png)
+
 A lightweight on-device View Debugger based on Core Animation. Inspired by [InAppViewDebugger](https://github.com/indragiek/InAppViewDebugger), but implemented in a traditonal way.
 
 More functions are ongoing.
@@ -52,6 +54,11 @@ it, simply add the following line to your Podfile:
 
 ```ruby
 pod 'CAViewDebugger'
+```
+For latest version:
+
+```ruby
+pod 'CAViewDebugger', :git => 'https://github.com/lhuanyu/CAViewDebugger.git'
 ```
 
 ## Author
