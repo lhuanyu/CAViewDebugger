@@ -89,7 +89,7 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
     
-    static func present(in window: UIWindow) {
+    public static func present(in window: UIWindow) {
         let debuggerVC = ViewDebuggerViewController(window: window)
         let navigationController = UINavigationController(rootViewController: debuggerVC)
         navigationController.modalPresentationStyle = .overFullScreen

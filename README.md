@@ -24,7 +24,10 @@ More functions are ongoing.
 
 import CAViewDegbugger
 
-ViewDebuggerViewController.present(in: self.view.window)
+override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    ViewDebuggerViewController.present(in: self.view.window!)
+}
 
 ```
 
