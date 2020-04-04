@@ -95,9 +95,6 @@ import UIKit
         navigationController.modalPresentationStyle = .overFullScreen
         navigationController.modalTransitionStyle = .crossDissolve
         debuggerVC.title = "\(type(of: window))"
-
-//        let item = UIBarButtonItem(title: "Settings", style: .done, target: debuggerVC, action: #selector(showSettings))
-//        debuggerVC.navigationItem.leftBarButtonItem = item
         
         debuggerVC.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: debuggerVC, action: #selector(done))
         window.rootViewController?.present(navigationController, animated: true, completion: {
