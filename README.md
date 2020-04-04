@@ -67,6 +67,8 @@ Cocoapod is not fully compatible with the new build system since Xcode 10 when i
 install! 'cocoapods', :disable_input_output_paths => true
 ```
 
+Or you can simpy add files in [**CAViewDebugger/ViewDebugger**](https://github.com/lhuanyu/CAViewDebugger/tree/master/CAViewDebugger/ViewDebugger) to your project.
+
 ## Author
 
 lhuanyu, lhuany@gmail.com
