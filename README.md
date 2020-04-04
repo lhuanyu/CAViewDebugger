@@ -14,6 +14,7 @@ More functions are ongoing.
 ## Requirements
 
 - iOS 10.0+
+- Swift 4.2
 
 ## Usage
 
@@ -21,8 +22,25 @@ More functions are ongoing.
 
 ```swift
 
-ViewDebuggerViewController.present(in: window)
+import CAViewDegbugger
+
+ViewDebuggerViewController.present(in: self.view.window)
 
 ```
 
- <img src="https://github.com/lhuanyu/CAViewDebugger/blob/master/doc/ScreenShot.png" width = "300">
+## Installation
+
+CAViewDebugger is available through [CocoaPods](https://cocoapods.org). To install
+it, simply add the following line to your Podfile:
+
+```ruby
+pod 'CAViewDebugger'
+```
+
+## Author
+
+lhuanyu, lhuany@gmail.com
+
+## License
+
+CAViewDebugger is available under the MIT license. See the LICENSE file for more info.

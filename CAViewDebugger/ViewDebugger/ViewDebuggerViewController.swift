@@ -8,9 +8,9 @@
 
 import UIKit
 
-final class ViewDebuggerViewController: UIViewController {
+@objc public final class ViewDebuggerViewController: UIViewController {
     
-    let containerView: SceneView!
+    private let containerView: SceneView!
     
     private lazy var basicInfoButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -56,7 +56,7 @@ final class ViewDebuggerViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = #colorLiteral(red: 0.8820094466, green: 0.8900626302, blue: 0.9024230838, alpha: 1)
         self.view.addSubview(containerView)
@@ -106,27 +106,22 @@ final class ViewDebuggerViewController: UIViewController {
     }
     
     @objc
-    func showSettings() {
+    private func showSettings() {
 
     }
     
     @objc
-    func done() {
+    private func done() {
         containerView.resetCamera { [weak self] finished in
             self?.dismiss(animated: true, completion: nil)
         }
     }
     
     @objc
-    func spacingSliderDidChange(_ sender: UISlider) {
+    private func spacingSliderDidChange(_ sender: UISlider) {
         containerView.layerSpacing = CGFloat(sender.value)
         containerView.update()
     }
-    
-    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return .portrait
-    }
-    
     
 }
 

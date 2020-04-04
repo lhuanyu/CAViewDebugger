@@ -89,13 +89,7 @@ final class SnapshotView: UIView {
     var normalFrame = CGRect.zero
     var visibleBounds = CGRect.zero
     var visibleFrame = CGRect.zero
-    var level: CGFloat = 0 {
-        didSet {
-//            if let text = titleView.titleLabel?.text {
-//                titleView.setTitle(text + ( "(level: \(Int(level)))"), for: .normal)
-//            }
-        }
-    }
+    var level: CGFloat = 0
     
     private lazy var titleView: UIButton = {
         let button = UIButton(type: .custom)
