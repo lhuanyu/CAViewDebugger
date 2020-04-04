@@ -51,7 +51,7 @@ import UIKit
         return slider
     }()
     
-    init(window: UIWindow) {
+    @objc public init(window: UIWindow) {
         self.containerView = SceneView(window: window)
         super.init(nibName: nil, bundle: nil)
     }
@@ -89,7 +89,7 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
     
-    public static func present(in window: UIWindow) {
+    @objc public static func present(in window: UIWindow) {
         let debuggerVC = ViewDebuggerViewController(window: window)
         let navigationController = UINavigationController(rootViewController: debuggerVC)
         navigationController.modalPresentationStyle = .overFullScreen

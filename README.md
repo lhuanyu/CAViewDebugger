@@ -14,7 +14,7 @@ More functions are ongoing.
 ## Requirements
 
 - iOS 10.0+
-- Swift 4.2
+- Objective-C, Swift 4.2
 
 ## Usage
 
@@ -30,6 +30,20 @@ override func viewDidAppear(_ animated: Bool) {
 }
 
 ```
+
+### Objective-C
+
+```swift
+
+@import CAViewDegbugger
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [ViewDebuggerViewController presentIn:self.view.window];
+}
+
+```
+
 
 ## Installation
 
