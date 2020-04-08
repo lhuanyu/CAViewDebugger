@@ -9,20 +9,22 @@
 import UIKit
 import simd
 
-protocol SceneViewDelgate: class {
+public protocol SceneViewDelgate: class {
     func sceneView(_ view: SceneView, didSelect snapshot: SnapshotView?)
     func sceneView(_ view: SceneView, didFocus snapshot: SnapshotView?)
 }
 
-final class SceneView: UIView {
+public final class SceneView: UIView {
     
-    override class var layerClass: AnyClass {
+    public override class var layerClass: AnyClass {
         return CATransformLayer.self
     }
     
-    weak var delegate: SceneViewDelgate?
+    public weak var delegate: SceneViewDelgate?
     
-    var selectedView: SnapshotView? {
+    public var configuration = Configuration()
+    
+    public var selectedView: SnapshotView? {
         didSet {
             oldValue?.selected = false
             selectedView?.selected = true
@@ -30,7 +32,7 @@ final class SceneView: UIView {
         }
     }
     
-    var focusedView: SnapshotView? {
+    public var focusedView: SnapshotView? {
         didSet {
             if let view = focusedView {
                 focusedViews = Set(view.recursiveChildren)
@@ -47,7 +49,8 @@ final class SceneView: UIView {
     
     private(set) var rootSnapshotView: SnapshotView!
     
-    init(window: UIWindow) {
+    @objc
+    public init(window: UIWindow) {
         super.init(frame:window.bounds)
         addGestures()
         
@@ -124,7 +127,7 @@ final class SceneView: UIView {
     private(set) var scale = CGFloat(0.6)
     
     /// we use nomal vector (x: 0, y: 0, z: 1) to determine the traversing direction of hit test.
-    var normalVector: simd_float4 {
+    public var normalVector: simd_float4 {
         let vector = simd_float4(0, 0, 1, 1)
         return vector * layer.sublayerTransform
     }
@@ -198,6 +201,14 @@ final class SceneView: UIView {
     
     func update() {
         transform()
+    }
+    
+    func update(with config: Configuration) {
+        configuration = config
+        subviews.forEach {
+            let snapshot = $0 as! SnapshotView
+            snapshot.update(with: config)
+        }
     }
     
     private func updateSceneTransform3D() {
@@ -282,7 +293,7 @@ final class SceneView: UIView {
 
     }
     
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let visibleLayers = Array(self.layersMap[visibleLevelsRange])
         let layers = normalVector.z > 0 ? visibleLayers.reversed() : visibleLayers
         for layer in layers {
@@ -300,7 +311,7 @@ final class SceneView: UIView {
 
 extension SceneView: CAAnimationDelegate {
     
-    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+    public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         guard flag else {
             return
         }

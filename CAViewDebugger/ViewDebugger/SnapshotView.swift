@@ -81,15 +81,21 @@ extension UIView: Snapshotable {
     
 }
 
-final class SnapshotView: UIView {
+public final class SnapshotView: UIView {
     
     weak var root: UIView!
     var originalView = UIView()
     var chidren = [SnapshotView]()
     var normalFrame = CGRect.zero
     var visibleBounds = CGRect.zero
-    var visibleFrame = CGRect.zero
+    var visibleFrame: CGRect {
+        return configuration.showClippedContent ? normalFrame : clippedFrame
+    }
+    var clippedFrame = CGRect.zero
     var level: CGFloat = 0
+    var image: CGImage?
+    var maskLayer: CAShapeLayer?
+    var configuration = Configuration()
     
     private lazy var titleView: UIButton = {
         let button = UIButton(type: .custom)
@@ -98,9 +104,9 @@ final class SnapshotView: UIView {
         button.titleLabel?.font = .systemFont(ofSize: 10)
         button.isUserInteractionEnabled = false
         
-        let frame = CGRect(x: self.visibleFrame.origin.x,
-                           y: self.visibleFrame.origin.y - 21,
-                           width: self.visibleFrame.width,
+        let frame = CGRect(x: self.clippedFrame.origin.x,
+                           y: self.clippedFrame.origin.y - 21,
+                           width: self.clippedFrame.width,
                            height: 19)
         button.frame = self.convert(frame, from: self.root)
         button.imageEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
@@ -109,11 +115,13 @@ final class SnapshotView: UIView {
         return button
     }()
     
-    init(view: UIView, root: UIWindow) {
+    @objc
+    public init(view: UIView, root: UIWindow) {
         super.init(frame: view.bounds)
         self.originalView = view
         self.root = root
-        self.layer.contents = view.snapshot()
+        self.image = view.snapshot()
+        self.layer.contents = self.image
         
         if let scrollView =  view.superview as? UIScrollView {
             let contentOffset = scrollView.contentOffset
@@ -127,25 +135,26 @@ final class SnapshotView: UIView {
         
         if let superview = superview, superview.clipsToBounds {
             let frame = superview.bounds.intersection(view.frame)
-            self.visibleFrame = root.convert(frame, from: superview)
+            self.clippedFrame = root.convert(frame, from: superview)
         } else {
-            self.visibleFrame = root.bounds.intersection(self.normalFrame)
+            self.clippedFrame = root.bounds.intersection(self.normalFrame)
         }
         
         let insets = UIEdgeInsets(top: -30, left: 0, bottom: 0, right: 0)
-        if self.visibleFrame != self.normalFrame {
-            self.visibleBounds = self.convert(self.visibleFrame, from: root).inset(by: insets)
+        if self.clippedFrame != self.normalFrame {
+            self.visibleBounds = self.convert(self.clippedFrame, from: root).inset(by: insets)
             let path = UIBezierPath(rect: visibleBounds)
-            let mask = CAShapeLayer()
-            mask.path = path.cgPath
-            mask.fillColor = UIColor.black.cgColor
-            mask.frame = self.layer.bounds
-            self.layer.mask = mask
+            maskLayer = CAShapeLayer()
+            maskLayer?.path = path.cgPath
+            maskLayer?.fillColor = UIColor.black.cgColor
+            maskLayer?.frame = self.layer.bounds
+            self.layer.mask = maskLayer
         } else {
             self.visibleBounds = bounds.inset(by: insets)
         }
         
-        self.addBorder()
+        self.addNormalBorder()
+        self.addClippedBorder()
         
         self.updateTitleView(with: view)
         self.addSubview(titleView)
@@ -165,15 +174,29 @@ final class SnapshotView: UIView {
         }
     }
     
-    private let border = CAShapeLayer()
+    private let clippedBorder = CAShapeLayer()
+    private let normalBorder = CAShapeLayer()
+    private var border: CAShapeLayer {
+        return configuration.showClippedContent ? normalBorder : clippedBorder
+    }
     
-    private func addBorder() {
-        let path = UIBezierPath(rect: convert(visibleFrame, from: root))
-        border.path = path.cgPath
-        border.fillColor = UIColor.clear.cgColor
-        border.strokeColor = UIColor.lightGray.cgColor
-        border.lineWidth = 1.0 * UIScreen.main.scale
-        layer.addSublayer(border)
+    private func addClippedBorder() {
+        let path = UIBezierPath(rect: convert(clippedFrame, from: root))
+        clippedBorder.path = path.cgPath
+        clippedBorder.fillColor = UIColor.clear.cgColor
+        clippedBorder.strokeColor = UIColor.lightGray.cgColor
+        clippedBorder.lineWidth = 1.0 * UIScreen.main.scale
+        layer.addSublayer(clippedBorder)
+    }
+    
+    private func addNormalBorder() {
+        let path = UIBezierPath(rect: convert(normalFrame, from: root))
+        normalBorder.path = path.cgPath
+        normalBorder.fillColor = UIColor.clear.cgColor
+        normalBorder.strokeColor = UIColor.lightGray.cgColor
+        normalBorder.lineWidth = 1.0 * UIScreen.main.scale
+        normalBorder.isHidden = true
+        layer.addSublayer(normalBorder)
     }
     
     private func updateTitleView(with view: UIView) {
@@ -234,14 +257,18 @@ final class SnapshotView: UIView {
         return superview as? SceneView
     }
     
-    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        if visibleBounds.contains(point) || titleView.frame.contains(point) {
+    private var touchBounds: CGRect {
+        return configuration.showClippedContent ? bounds : visibleBounds
+    }
+    
+    public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        if touchBounds.contains(point) || (!titleView.isHidden && titleView.frame.contains(point)) {
             return true
         }
         return false
     }
     
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         return nil
     }
     
@@ -251,7 +278,44 @@ final class SnapshotView: UIView {
     
 }
 
-enum PayloadType {
+extension SnapshotView {
+    
+    public func update(with config: Configuration) {
+        configuration = config
+        
+        if configuration.showClippedContent {
+            clippedBorder.isHidden = true
+            normalBorder.isHidden = false
+            layer.mask = nil
+        } else {
+            clippedBorder.isHidden = false
+            normalBorder.isHidden = true
+            layer.mask = maskLayer
+        }
+        
+        if configuration.showViewLabel {
+            titleView.isHidden = false
+        } else {
+            titleView.isHidden = (originalView.payload == .view)
+        }
+        
+        switch configuration.viewMode {
+        case .content:
+            layer.contents = image
+            border.lineWidth = 0
+        case .wireframe:
+            layer.contents = nil
+            border.lineWidth = 1.0 * UIScreen.main.scale
+        case .all:
+            layer.contents = image
+            border.lineWidth = 1.0 * UIScreen.main.scale
+        }
+                
+    }
+    
+}
+
+enum PayloadType: Equatable {
     case window
     case controller(String)
     case view
@@ -310,7 +374,7 @@ extension UIView {
 extension UIImage {
     
     static func bundleImage(named name: String) -> UIImage? {
-        return UIImage(named: name, in: Bundle.init(for: SnapshotView.self), compatibleWith: nil)
+        return UIImage(named: name, in: Bundle(for: SnapshotView.self), compatibleWith: nil)
     }
     
 }

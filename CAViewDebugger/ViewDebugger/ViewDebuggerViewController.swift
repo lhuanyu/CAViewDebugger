@@ -8,7 +8,8 @@
 
 import UIKit
 
-@objc public final class ViewDebuggerViewController: UIViewController {
+@objc
+public final class ViewDebuggerViewController: UIViewController, UIAdaptivePresentationControllerDelegate, UINavigationControllerDelegate {
     
     private let containerView: SceneView!
     
@@ -89,22 +90,47 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc public static func present(in window: UIWindow) {
+    @objc
+    public static func present(in window: UIWindow) {
         let debuggerVC = ViewDebuggerViewController(window: window)
         let navigationController = UINavigationController(rootViewController: debuggerVC)
         navigationController.modalPresentationStyle = .overFullScreen
         navigationController.modalTransitionStyle = .crossDissolve
         debuggerVC.title = "\(type(of: window))"
         
+        debuggerVC.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Settings", style: .done, target: debuggerVC, action: #selector(showSettings))
         debuggerVC.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: debuggerVC, action: #selector(done))
         window.rootViewController?.present(navigationController, animated: true, completion: {
             debuggerVC.containerView.setCamera()
         })
     }
     
+    private lazy var configurationViewController = ConfigurationTableViewController(configuration: containerView.configuration)
+    
     @objc
     private func showSettings() {
-
+        if #available(iOS 13.0, *) {
+            configurationViewController.presentationController?.delegate = self
+            present(configurationViewController, animated: true, completion: nil)
+        } else {
+            navigationController?.delegate = self
+            navigationController?.pushViewController(configurationViewController, animated: true)
+        }
+    }
+    
+    public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        updateConfigurationIfNeeded()
+    }
+    
+    public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        updateConfigurationIfNeeded()
+    }
+    
+    private func updateConfigurationIfNeeded() {
+        if containerView.configuration != configurationViewController.configuration {
+            containerView.update(with: configurationViewController.configuration)
+            updateBasicInfoButton(with: containerView.selectedView)
+        }
     }
     
     @objc
@@ -125,17 +151,11 @@ import UIKit
 
 extension ViewDebuggerViewController: SceneViewDelgate {
     
-    func sceneView(_ view: SceneView, didSelect snapshot: SnapshotView?) {
-        if let snapshot = snapshot {
-            basicInfoButton.setImage(snapshot.originalView.payloadIcon, for: .normal)
-            basicInfoButton.setTitle(snapshot.originalView.payloadName + " " + snapshot.frame.oneDigitDescription, for: .normal)
-            basicInfoButton.isHidden = false
-        } else {
-            basicInfoButton.isHidden = true
-        }
+    public func sceneView(_ view: SceneView, didSelect snapshot: SnapshotView?) {
+        updateBasicInfoButton(with: snapshot)
     }
     
-    func sceneView(_ view: SceneView, didFocus snapshot: SnapshotView?) {
+    public func sceneView(_ view: SceneView, didFocus snapshot: SnapshotView?) {
         if let snapshot = snapshot {
             title = snapshot.originalView.payloadName
         } else {
@@ -143,6 +163,16 @@ extension ViewDebuggerViewController: SceneViewDelgate {
         }
     }
     
+    
+    private func updateBasicInfoButton(with snapshot: SnapshotView?) {
+        if let snapshot = snapshot {
+            basicInfoButton.setImage(snapshot.originalView.payloadIcon, for: .normal)
+            basicInfoButton.setTitle(snapshot.originalView.payloadName + " " + snapshot.visibleFrame.oneDigitDescription, for: .normal)
+            basicInfoButton.isHidden = false
+        } else {
+            basicInfoButton.isHidden = true
+        }
+    }
     
 }
 

@@ -1,6 +1,6 @@
 # CAViewDebugger
 
- <img src="https://github.com/lhuanyu/CAViewDebugger/blob/master/doc/ScreenShot.png" width = "300">
+ <img src="https://github.com/lhuanyu/CAViewDebugger/blob/master/doc/Snapshot.jpg">
 
 A lightweight on-device View Debugger based on Core Animation. Inspired by [InAppViewDebugger](https://github.com/indragiek/InAppViewDebugger), but implemented in a traditonal way.
 
@@ -10,6 +10,7 @@ More functions are ongoing.
 
 - [x] 3D Snapshot View Hierarchy implemented in Core Animation.
 - [x] Original Xcode UI style and icons.
+- [x] Full gestures support.
 - [ ] Object and Size inspectors.
 - [ ] Dynamic editing on views.
 
@@ -45,7 +46,13 @@ override func viewDidAppear(_ animated: Bool) {
 }
 
 ```
+### Full Gestures Support
 
+- [x] Tap to select a view. Tap on scene to deselect.
+- [x] Double tap to focus a view and its children. Double tap on scene to lose focus.
+- [x] Zoom.
+- [x] Pan to rotate.
+- [x] Double pan to move scene around.
 
 ## Installation
 
@@ -61,17 +68,19 @@ For latest version:
 pod 'CAViewDebugger', :git => 'https://github.com/lhuanyu/CAViewDebugger.git'
 ```
 
+Or you can simpy add files in [**CAViewDebugger/ViewDebugger**](https://github.com/lhuanyu/CAViewDebugger/tree/master/CAViewDebugger/ViewDebugger) to your project.
+
+## Known Issue
+
 Cocoapod is not fully compatible with the new build system since Xcode 10 when intergated pods with assets([issue#8122](https://github.com/CocoaPods/CocoaPods/issues/8122#issuecomment-531202439)). If you find icons lost, try to add this line below to your podfile: 
 
 ```ruby
 install! 'cocoapods', :disable_input_output_paths => true
 ```
 
-Or you can simpy add files in [**CAViewDebugger/ViewDebugger**](https://github.com/lhuanyu/CAViewDebugger/tree/master/CAViewDebugger/ViewDebugger) to your project.
-
 ## Author
 
-lhuanyu, lhuany@gmail.com
+Huanyu Luo, lhuany@gmail.com
 
 ## License
 
