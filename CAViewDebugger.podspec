@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name               = "CAViewDebugger"
-  s.version            = "0.0.1"
-  s.summary            = "A lightweight on-device View Debugger based on Core Animation."
+  s.version            = "0.0.2"
+  s.summary            = "A lightweight on-device View Hierarchy Debugger(like Xcode) based on Core Animation."
   s.homepage           = "https://github.com/lhuanyu/CAViewDebugger"
   s.license            = { :type => 'MIT', :file => 'LICENSE' }
   s.author             = { 'lhuanyu' => 'lhuany@gmail.com' }
