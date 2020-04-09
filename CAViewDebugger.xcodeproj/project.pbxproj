@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		E44A4755243C1032003787A8 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44A4754243C1032003787A8 /* Configuration.swift */; };
 		E44A4757243D5A7C003787A8 /* ConfigurationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44A4756243D5A7C003787A8 /* ConfigurationTableViewController.swift */; };
+		E44A4759243EAC9C003787A8 /* ObjectInspectorTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44A4758243EAC9C003787A8 /* ObjectInspectorTableViewController.swift */; };
+		E44A475B243EACD5003787A8 /* ObjectInspectorDatasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44A475A243EACD5003787A8 /* ObjectInspectorDatasource.swift */; };
 		E44C2EA5242CDAA500D5F4B0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C2EA4242CDAA500D5F4B0 /* AppDelegate.swift */; };
 		E44C2EA7242CDAA500D5F4B0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C2EA6242CDAA500D5F4B0 /* SceneDelegate.swift */; };
 		E44C2EA9242CDAA500D5F4B0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C2EA8242CDAA500D5F4B0 /* ViewController.swift */; };
@@ -25,6 +27,8 @@
 /* Begin PBXFileReference section */
 		E44A4754243C1032003787A8 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		E44A4756243D5A7C003787A8 /* ConfigurationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationTableViewController.swift; sourceTree = "<group>"; };
+		E44A4758243EAC9C003787A8 /* ObjectInspectorTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectInspectorTableViewController.swift; sourceTree = "<group>"; };
+		E44A475A243EACD5003787A8 /* ObjectInspectorDatasource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectInspectorDatasource.swift; sourceTree = "<group>"; };
 		E44C2EA1242CDAA500D5F4B0 /* CAViewDebugger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CAViewDebugger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E44C2EA4242CDAA500D5F4B0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E44C2EA6242CDAA500D5F4B0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -91,6 +95,8 @@
 				E4F24A1324332A5F0058B109 /* RangeSlider.swift */,
 				E44C2EBC242DE30100D5F4B0 /* ViewDebuggerViewController.swift */,
 				E44A4756243D5A7C003787A8 /* ConfigurationTableViewController.swift */,
+				E44A4758243EAC9C003787A8 /* ObjectInspectorTableViewController.swift */,
+				E44A475A243EACD5003787A8 /* ObjectInspectorDatasource.swift */,
 				E4BEE5C12438A55C00F46E0F /* Assets.xcassets */,
 			);
 			path = ViewDebugger;
@@ -172,7 +178,9 @@
 				E44A4755243C1032003787A8 /* Configuration.swift in Sources */,
 				E44C2EBD242DE30100D5F4B0 /* ViewDebuggerViewController.swift in Sources */,
 				E44A4757243D5A7C003787A8 /* ConfigurationTableViewController.swift in Sources */,
+				E44A4759243EAC9C003787A8 /* ObjectInspectorTableViewController.swift in Sources */,
 				E4BAAABD242F34B500082DA4 /* SceneView.swift in Sources */,
+				E44A475B243EACD5003787A8 /* ObjectInspectorDatasource.swift in Sources */,
 				E44C2EA9242CDAA500D5F4B0 /* ViewController.swift in Sources */,
 				E44C2EA5242CDAA500D5F4B0 /* AppDelegate.swift in Sources */,
 				E4F24A1424332A5F0058B109 /* RangeSlider.swift in Sources */,

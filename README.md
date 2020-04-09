@@ -11,7 +11,7 @@ More functions are ongoing.
 - [x] 3D Snapshot View Hierarchy implemented in Core Animation.
 - [x] Original Xcode UI style and icons.
 - [x] Full gestures support.
-- [ ] Object and Size inspectors.
+- [x] Object and Size inspectors.
 - [ ] Dynamic editing on views.
 
 ## Requirements

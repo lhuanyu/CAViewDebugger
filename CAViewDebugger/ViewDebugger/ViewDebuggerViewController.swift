@@ -24,7 +24,7 @@ public final class ViewDebuggerViewController: UIViewController, UIAdaptivePrese
         button.imageEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         button.imageView?.contentMode = .scaleAspectFit
         button.layer.zPosition = 20000
-
+        button.addTarget(self, action: #selector(showObjectInspector(_:)), for: .touchUpInside)
         return button
     }()
 
@@ -144,6 +144,16 @@ public final class ViewDebuggerViewController: UIViewController, UIAdaptivePrese
     private func spacingSliderDidChange(_ sender: UISlider) {
         containerView.layerSpacing = CGFloat(sender.value)
         containerView.update()
+    }
+    
+    @objc
+    func showObjectInspector(_ sender: UIButton) {
+        let inspectorVC = ObjectInspectorTableViewController(snapshot: containerView.selectedView!)
+        if #available(iOS 13.0, *) {
+            present(inspectorVC, animated: true, completion: nil)
+        } else {
+            navigationController?.pushViewController(inspectorVC, animated: true)
+        }
     }
     
 }
