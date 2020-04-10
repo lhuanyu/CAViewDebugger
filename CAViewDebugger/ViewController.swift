@@ -54,6 +54,7 @@ class ViewController: UIViewController {
         view6.contentMode = .scaleAspectFit
         view6.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         view6.frame = frames2.remainder
+        view6.accessibilityIdentifier = "Test"
         
         view2.addSubview(view5)
         view2.addSubview(view6)

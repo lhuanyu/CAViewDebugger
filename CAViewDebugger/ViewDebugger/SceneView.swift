@@ -236,8 +236,18 @@ public final class SceneView: UIView {
         return CATransform3DMakeScale(scale, scale, scale) + rotate
     }()
     
+    private func setDeaultParas() {
+        xPosition = 0
+        yPosition = 0
+        yRotation = .pi / 3
+        xRotation = -.pi * 0.2
+        scale = 0.6
+        layer.anchorPoint = .init(x: 0.5, y: 0.5)
+        layerSpacing = 25.0
+    }
     
     func setCamera() {
+        setDeaultParas()
         let animation = CABasicAnimation(keyPath: #keyPath(CALayer.sublayerTransform))
         animation.toValue = SceneView.DefaultCameraTransform
         animation.duration = 0.3

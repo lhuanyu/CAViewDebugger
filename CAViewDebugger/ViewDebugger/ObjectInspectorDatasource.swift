@@ -13,8 +13,8 @@ enum ObjectInspectorSection: String, CaseIterable, CustomStringConvertible {
     case view
     case drawing
 //    case stretching
-//    case traitCollection = "Trait Collection"
-//    case accessibility
+    case traitCollection = "Trait Collection"
+    case accessibility
     case description
     case hierarchy
     
@@ -35,11 +35,11 @@ enum ObjectInspectorSection: String, CaseIterable, CustomStringConvertible {
         case .drawing:
             return ["Opaque", "Hidden", "Clear Graphic Context", "Clip To Bounds", "Autoresizing Subviews"]
 //        case .stretching:
-//            return []
-//        case .traitCollection:
-//            return []
-//        case .accessibility:
-//            return []
+//            return ["Stretching"]
+        case .traitCollection:
+            return ["Trait Collection"]
+        case .accessibility:
+            return ["Value", "Traits", "Elements", "Description", "Hint", "Identifier", "Actions"]
         case .description:
             return ["Description"]
         case .hierarchy:

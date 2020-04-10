@@ -100,6 +100,10 @@ public final class ViewDebuggerViewController: UIViewController, UIAdaptivePrese
         
         debuggerVC.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Settings", style: .done, target: debuggerVC, action: #selector(showSettings))
         debuggerVC.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: debuggerVC, action: #selector(done))
+        
+        let resetButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: debuggerVC, action: #selector(restore))
+        debuggerVC.navigationItem.rightBarButtonItems?.append(resetButton)
+        
         window.rootViewController?.present(navigationController, animated: true, completion: {
             debuggerVC.containerView.setCamera()
         })
@@ -131,6 +135,12 @@ public final class ViewDebuggerViewController: UIViewController, UIAdaptivePrese
             containerView.update(with: configurationViewController.configuration)
             updateBasicInfoButton(with: containerView.selectedView)
         }
+    }
+    
+    @objc
+    private func restore() {
+        containerView.setCamera()
+        spacingSlider.setValue(Float(containerView.layerSpacing), animated: true)
     }
     
     @objc

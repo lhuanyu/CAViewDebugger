@@ -121,7 +121,7 @@ class ObjectInspectorTableViewController: UITableViewController {
                 if let name = originalView.backgroundColor?.name {
                     cell.detailTextLabel?.text = (originalView.backgroundColor?.rgbDesciption ?? "") + " " + name
                 } else {
-                    cell.detailTextLabel?.text = originalView.backgroundColor?.rgbDesciption
+                    cell.detailTextLabel?.text = originalView.backgroundColor?.rgbDesciption ?? "nil color"
                 }
             case .tintColor:
                 tintColorView.backgroundColor = originalView.tintColor
@@ -129,7 +129,7 @@ class ObjectInspectorTableViewController: UITableViewController {
                 if let name = originalView.tintColor?.name {
                     cell.detailTextLabel?.text = (originalView.tintColor?.rgbDesciption ?? "") + " " + name
                 } else {
-                    cell.detailTextLabel?.text = originalView.tintColor?.rgbDesciption
+                    cell.detailTextLabel?.text = originalView.tintColor?.rgbDesciption ?? "nil color"
                 }
             }
         case .drawing:
@@ -143,6 +143,33 @@ class ObjectInspectorTableViewController: UITableViewController {
                 cell.detailTextLabel?.text = "\(originalView.clipsToBounds)"
             } else if row == 4 {
                 cell.detailTextLabel?.text = "\(originalView.autoresizesSubviews)"
+            }
+        case .traitCollection:
+            cell.textLabel?.text = nil
+            cell.detailTextLabel?.text = originalView.traitCollectionDescription
+        case .accessibility:
+            if row == 0 {
+                cell.detailTextLabel?.text = originalView.accessibilityValue ?? "null"
+            } else if row == 1 {
+                cell.detailTextLabel?.text = "\(originalView.accessibilityTraits)"
+            } else if row == 2 {
+                if let elements = originalView.accessibilityElements {
+                    cell.detailTextLabel?.text = "\(elements)"
+                } else {
+                    cell.detailTextLabel?.text = "null"
+                }
+            } else if row == 3 {
+                cell.detailTextLabel?.text = originalView.accessibilityLabel ?? "null"
+            } else if row == 4 {
+                cell.detailTextLabel?.text = originalView.accessibilityHint ?? "null"
+            } else if row == 5 {
+                cell.detailTextLabel?.text = originalView.accessibilityIdentifier ?? "null"
+            } else if row == 6 {
+                if let actions = originalView.accessibilityCustomActions {
+                    cell.detailTextLabel?.text = "\(actions)"
+                } else {
+                    cell.detailTextLabel?.text = "null"
+                }
             }
         case .description:
             cell.textLabel?.text = nil
@@ -196,6 +223,76 @@ extension UIView {
         return hierachy
         
     }
+    
+    var traitCollectionDescription: String {
+        var style = "not available"
+        if #available(iOS 13.0, *) {
+            if traitCollection.userInterfaceStyle == .unspecified {
+                style = UIScreen.main.traitCollection.userInterfaceStyle.description
+            } else {
+                style = traitCollection.userInterfaceStyle.description
+            }
+        }
+        style += "\n"
+        let vertical = traitCollection.verticalSizeClass.description + " Size Class\n"
+        let horizontal = traitCollection.horizontalSizeClass.description + " Size Class\n"
+        let direction = traitCollection.layoutDirection.description
+        return style + vertical + horizontal + direction
+    }
+    
+}
+
+@available(iOS 12.0, *)
+extension UIUserInterfaceStyle: CustomStringConvertible {
+    
+    public var description: String {
+        switch self {
+        case .light:
+            return "Light User Interface Style"
+        case .dark:
+            return "Dark User Interface Style"
+        case .unspecified:
+            return "Unspecified"
+        @unknown default:
+            fatalError()
+        }
+    }
+    
+}
+
+extension UIUserInterfaceSizeClass: CustomStringConvertible {
+    
+    public var description: String {
+        switch self {
+        case .compact:
+            return "Compact"
+        case .unspecified:
+            
+            return "Unspecified"
+        case .regular:
+            return "Regular"
+        @unknown default:
+            fatalError()
+        }
+    }
+    
+}
+
+extension UITraitEnvironmentLayoutDirection: CustomStringConvertible {
+    
+    public var description: String {
+        switch self {
+        case .leftToRight:
+            return "Left To Right"
+        case .unspecified:
+            return "Unspecified"
+        case .rightToLeft:
+            return "Right To Left"
+        @unknown default:
+            fatalError()
+        }
+    }
+    
 }
 
 extension UIView.ContentMode: CustomStringConvertible {
@@ -232,4 +329,5 @@ extension UIView.ContentMode: CustomStringConvertible {
             return ""
         }
     }
+
 }
