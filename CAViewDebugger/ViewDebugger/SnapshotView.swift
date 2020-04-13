@@ -85,6 +85,7 @@ public final class SnapshotView: UIView {
     
     weak var root: UIView!
     var originalView = UIView()
+    weak var parent: SnapshotView?
     var chidren = [SnapshotView]()
     var normalFrame = CGRect.zero
     var visibleBounds = CGRect.zero
@@ -93,9 +94,33 @@ public final class SnapshotView: UIView {
     }
     var clippedFrame = CGRect.zero
     var level: CGFloat = 0
+    var depth: Int = 0
     var image: CGImage?
     var maskLayer: CAShapeLayer?
     var configuration = Configuration()
+    
+    func fold() {
+        isFolding = true
+        chidren.forEach {
+            $0.isVisible = !isFolding
+        }
+    }
+    
+    func unfold() {
+        isFolding = false
+        chidren.forEach {
+            $0.isVisible = !isFolding
+        }
+    }
+    
+    var isFolding = true
+    var isVisible = false {
+        didSet {
+            chidren.forEach {
+                $0.isVisible = isVisible && !isFolding
+            }
+        }
+    }
     
     private lazy var titleView: UIButton = {
         let button = UIButton(type: .custom)
@@ -120,6 +145,7 @@ public final class SnapshotView: UIView {
         super.init(frame: view.bounds)
         self.originalView = view
         self.root = root
+        self.isVisible = view == root
         self.image = view.snapshot()
         self.layer.contents = self.image
         
@@ -170,6 +196,7 @@ public final class SnapshotView: UIView {
         
         self.chidren = view.subviews.map {
             let snapshot = SnapshotView(view: $0, root: root)
+            snapshot.parent = self
             return snapshot
         }
     }
@@ -273,7 +300,7 @@ public final class SnapshotView: UIView {
     }
     
     var recursiveChildren: [SnapshotView] {
-        return chidren + chidren.flatMap { $0.recursiveChildren }
+        return chidren.flatMap { [$0] + $0.recursiveChildren }
     }
     
 }

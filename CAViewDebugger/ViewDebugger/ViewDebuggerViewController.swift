@@ -27,6 +27,16 @@ public final class ViewDebuggerViewController: UIViewController, UIAdaptivePrese
         button.addTarget(self, action: #selector(showObjectInspector(_:)), for: .touchUpInside)
         return button
     }()
+    
+    private lazy var viewHirearchyButton: UIButton = {
+        let button = UIButton(type: .system)
+        var top = CGFloat.zero
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("View Hireacrchy", for: .normal)
+        button.layer.zPosition = 20000
+        button.addTarget(self, action: #selector(showViewHierachy(_:)), for: .touchUpInside)
+        return button
+    }()
 
     private lazy var rangeSlider: RangeSlider = {
         let slider = RangeSlider(range: 0...Int(self.containerView.maxLevel))
@@ -52,7 +62,8 @@ public final class ViewDebuggerViewController: UIViewController, UIAdaptivePrese
         return slider
     }()
     
-    @objc public init(window: UIWindow) {
+    @objc
+    public init(window: UIWindow) {
         self.containerView = SceneView(window: window)
         super.init(nibName: nil, bundle: nil)
     }
@@ -83,6 +94,17 @@ public final class ViewDebuggerViewController: UIViewController, UIAdaptivePrese
             basicInfoButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
             basicInfoButton.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
             basicInfoButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        }
+        
+        view.addSubview(viewHirearchyButton)
+        if #available(iOS 11.0, *) {
+            viewHirearchyButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50).isActive = true
+            viewHirearchyButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -15).isActive = true
+            viewHirearchyButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        } else {
+            viewHirearchyButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -95).isActive = true
+            viewHirearchyButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -15).isActive = true
+            viewHirearchyButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         }
     }
     
@@ -157,12 +179,22 @@ public final class ViewDebuggerViewController: UIViewController, UIAdaptivePrese
     }
     
     @objc
-    func showObjectInspector(_ sender: UIButton) {
+    private func showObjectInspector(_ sender: UIButton) {
         let inspectorVC = ObjectInspectorTableViewController(snapshot: containerView.selectedView!)
         if #available(iOS 13.0, *) {
             present(inspectorVC, animated: true, completion: nil)
         } else {
             navigationController?.pushViewController(inspectorVC, animated: true)
+        }
+    }
+    
+    @available(iOS 13.0, *)
+    private lazy var viewHirearchyTableViewController = ViewHierarchyTableViewController(scene: containerView)
+    
+    @objc
+    private func showViewHierachy(_ sender: UIButton) {
+        if #available(iOS 13.0, *) {
+            present(viewHirearchyTableViewController, animated: true, completion: nil)
         }
     }
     

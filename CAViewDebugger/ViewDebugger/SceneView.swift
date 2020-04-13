@@ -97,8 +97,9 @@ public final class SceneView: UIView {
         } else {
             layersMap[Int(level)].append(snapshot)
         }
-        
+        let childDepth = snapshot.depth + 1
         for child in snapshot.chidren {
+            child.depth = childDepth
             var childLevel: CGFloat
             
             if subviewFrames.contains(where: {$0.intersects(child.normalFrame)}) {
