@@ -18,7 +18,7 @@ public final class ViewDebuggerViewController: UIViewController, UIAdaptivePrese
         var top = CGFloat.zero
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 10)
+        button.titleLabel?.font = .systemFont(ofSize: 12)
         button.backgroundColor = .white
         button.isHidden = true
         button.imageEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
@@ -40,24 +40,17 @@ public final class ViewDebuggerViewController: UIViewController, UIAdaptivePrese
 
     private lazy var rangeSlider: RangeSlider = {
         let slider = RangeSlider(range: 0...Int(self.containerView.maxLevel))
-        slider.frame = CGRect(x: self.view.bounds.width * 0.5,
-                              y: self.view.bounds.height - 80,
-                              width: self.view.bounds.width * 0.5 - 15,
-                              height: 40)
-        slider.autoresizingMask = [.flexibleTopMargin, .flexibleWidth, .flexibleLeftMargin]
+        slider.translatesAutoresizingMaskIntoConstraints = false
         slider.layer.zPosition = 20000
         return slider
     }()
     
     private lazy var spacingSlider: UISlider = {
-        let slider = UISlider(frame: CGRect(x: 10,
-                                            y: self.view.bounds.height - 80,
-                                            width: self.view.bounds.width * 0.5 - 15,
-                                            height: 40))
+        let slider = UISlider(frame: .zero)
         slider.maximumValue = 200
         slider.minimumValue = 1
         slider.addTarget(self, action: #selector(spacingSliderDidChange(_:)), for: .valueChanged)
-        slider.autoresizingMask = [.flexibleTopMargin, .flexibleWidth, .flexibleRightMargin]
+        slider.translatesAutoresizingMaskIntoConstraints = false
         slider.layer.zPosition = 20000
         return slider
     }()
@@ -84,27 +77,42 @@ public final class ViewDebuggerViewController: UIViewController, UIAdaptivePrese
         spacingSlider.value = Float(containerView.layerSpacing)
         view.addSubview(basicInfoButton)
         
+        spacingSlider.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        spacingSlider.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5, constant: -15).isActive = true
+        rangeSlider.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        rangeSlider.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5, constant: -15).isActive = true
+
+        if #available(iOS 11.0, *) {
+            spacingSlider.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true
+            spacingSlider.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+            
+            rangeSlider.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -10).isActive = true
+            rangeSlider.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        } else {
+            spacingSlider.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+            spacingSlider.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            
+            rangeSlider.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10).isActive = true
+            rangeSlider.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        }
+        
+        basicInfoButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        basicInfoButton.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        basicInfoButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+
         if #available(iOS 11.0, *) {
             basicInfoButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-            basicInfoButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-            basicInfoButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
-            basicInfoButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
         } else {
-            basicInfoButton.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-            basicInfoButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-            basicInfoButton.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-            basicInfoButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
+            basicInfoButton.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
         }
         
         view.addSubview(viewHirearchyButton)
+        viewHirearchyButton.bottomAnchor.constraint(equalTo: rangeSlider.topAnchor, constant: -10).isActive = true
+        viewHirearchyButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         if #available(iOS 11.0, *) {
-            viewHirearchyButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50).isActive = true
-            viewHirearchyButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -15).isActive = true
-            viewHirearchyButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            viewHirearchyButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -10).isActive = true
         } else {
-            viewHirearchyButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -95).isActive = true
-            viewHirearchyButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -15).isActive = true
-            viewHirearchyButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            viewHirearchyButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10).isActive = true
         }
     }
     
@@ -188,13 +196,16 @@ public final class ViewDebuggerViewController: UIViewController, UIAdaptivePrese
         }
     }
     
-    @available(iOS 13.0, *)
-    private lazy var viewHirearchyTableViewController = ViewHierarchyTableViewController(scene: containerView)
+    private lazy var viewHirearchyTableViewController: ViewHierarchyTableViewController = {
+        return ViewHierarchyTableViewController(scene: self.containerView)
+    }()
     
     @objc
     private func showViewHierachy(_ sender: UIButton) {
         if #available(iOS 13.0, *) {
             present(viewHirearchyTableViewController, animated: true, completion: nil)
+        } else {
+            navigationController?.pushViewController(viewHirearchyTableViewController, animated: true)
         }
     }
     
