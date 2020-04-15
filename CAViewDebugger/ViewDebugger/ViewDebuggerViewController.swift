@@ -78,20 +78,22 @@ public final class ViewDebuggerViewController: UIViewController, UIAdaptivePrese
         view.addSubview(basicInfoButton)
         
         spacingSlider.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        spacingSlider.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5, constant: -15).isActive = true
         rangeSlider.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        rangeSlider.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5, constant: -15).isActive = true
 
         if #available(iOS 11.0, *) {
+            spacingSlider.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.5, constant: -15).isActive = true
             spacingSlider.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true
             spacingSlider.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
             
+            rangeSlider.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.5, constant: -15).isActive = true
             rangeSlider.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -10).isActive = true
             rangeSlider.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         } else {
+            spacingSlider.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5, constant: -15).isActive = true
             spacingSlider.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
             spacingSlider.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
             
+            rangeSlider.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5, constant: -15).isActive = true
             rangeSlider.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10).isActive = true
             rangeSlider.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         }
