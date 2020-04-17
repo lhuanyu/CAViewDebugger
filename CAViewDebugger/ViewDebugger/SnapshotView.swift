@@ -388,7 +388,12 @@ extension UIView {
     var payloadIcon: UIImage? {
         switch self.payload {
         case .window:
-            return nil
+            let tintColor = UIColor.lightGray.withAlphaComponent(0.3)
+            if #available(iOS 13.0, *) {
+                return UIImage.bundleImage(named: "UIView")?.withTintColor(tintColor, renderingMode: .alwaysOriginal)
+            } else {
+                return UIImage.bundleImage(named: "UIView")
+            }
         case .controller(_):
             return UIImage.bundleImage(named: "UIViewController")
         case .view:

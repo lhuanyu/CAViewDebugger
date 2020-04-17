@@ -9,18 +9,49 @@
 import UIKit
 
 class ViewHierarchyCell: UITableViewCell {
+        
+    func config(with snapshot: SnapshotView) {
+        imageView?.image = snapshot.originalView.payloadIcon
+        arrowButton.isHidden = snapshot.chidren.isEmpty
+        arrowButton.isSelected = !snapshot.isFolding
+        indentationLevel = snapshot.depth + 1
+        textLabel?.text = snapshot.originalView.payloadName
+    }
+    
+    var foldButtonDidClickHandler: (()-> Void)?
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         indentationWidth = 20
+        contentView.addSubview(self.arrowButton)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private lazy var arrowButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage.bundleImage(named: "XDCompartmentRightArrow"), for: .normal)
+        button.setImage(UIImage.bundleImage(named: "XDCompartmentDownArrow"), for: .selected)
+        button.isHidden = true
+        button.addTarget(self, action: #selector(foldButtonDidClick(_:)), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc
+    private func foldButtonDidClick(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        foldButtonDidClickHandler?()
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         imageView?.frame.origin.x += indentationWidth * CGFloat(indentationLevel)
+        if var frame = imageView?.frame {
+            frame.origin.x -= (frame.size.width + 5)
+            arrowButton.frame = frame
+        }
     }
 }
 
@@ -37,11 +68,16 @@ class ViewHierarchyTableViewController: UITableViewController {
     @available(iOS 13.0, *)
     private lazy var datasource: UITableViewDiffableDataSource = {
         return UITableViewDiffableDataSource<Section, SnapshotView>(tableView: self.tableView) { (tableView, indexPath, snapshot) -> UITableViewCell? in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "CellIdentifer", for: indexPath)
-            cell.imageView?.image = snapshot.originalView.payloadIcon
-            cell.accessoryType = snapshot.chidren.isEmpty ? .none : .detailButton
-            cell.indentationLevel = snapshot.depth
-            cell.textLabel?.text = snapshot.originalView.payloadName
+            let cell = tableView.dequeueReusableCell(withIdentifier: "CellIdentifer", for: indexPath) as! ViewHierarchyCell
+            cell.config(with: snapshot)
+            cell.foldButtonDidClickHandler = { [unowned self, unowned snapshot] in
+                if snapshot.isFolding {
+                    snapshot.unfold()
+                } else {
+                    snapshot.fold()
+                }
+                self.update()
+            }
             return cell
         }
     }()
@@ -120,11 +156,16 @@ class ViewHierarchyTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let snapshot = visibleSnapshots[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CellIdentifer", for: indexPath)
-        cell.imageView?.image = snapshot.originalView.payloadIcon
-        cell.accessoryType = snapshot.chidren.isEmpty ? .none : .detailButton
-        cell.indentationLevel = snapshot.depth
-        cell.textLabel?.text = snapshot.originalView.payloadName
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CellIdentifer", for: indexPath) as! ViewHierarchyCell
+        cell.config(with: snapshot)
+        cell.foldButtonDidClickHandler = { [unowned self, unowned snapshot] in
+            if snapshot.isFolding {
+                snapshot.unfold()
+            } else {
+                snapshot.fold()
+            }
+            self.update()
+        }
         return cell
     }
     
@@ -142,18 +183,6 @@ class ViewHierarchyTableViewController: UITableViewController {
         } else {
             return visibleSnapshots[indexPath.row]
         }
-    }
-    
-    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        guard let snapshotView = snapshot(for: indexPath) else {
-            return
-        }
-        if snapshotView.isFolding {
-            snapshotView.unfold()
-        } else {
-            snapshotView.fold()
-        }
-        update()
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
