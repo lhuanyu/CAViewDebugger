@@ -39,6 +39,7 @@ class ObjectInspectorTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Object Inspector"
         tableView.allowsSelection = false
         tableView.register(InspectorDetailCell.self, forCellReuseIdentifier: ObjectInspectorTableViewController.CellIdentifier)
     }

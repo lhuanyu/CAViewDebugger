@@ -95,6 +95,7 @@ class ViewHierarchyTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "View Hierarchy"
         tableView.register(ViewHierarchyCell.self, forCellReuseIdentifier: "CellIdentifer")
         if #available(iOS 13.0, *) {
             tableView.dataSource = datasource

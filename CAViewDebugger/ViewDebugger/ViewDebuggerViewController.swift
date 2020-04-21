@@ -146,8 +146,7 @@ public final class ViewDebuggerViewController: UIViewController, UIAdaptivePrese
     @objc
     private func showSettings() {
         if #available(iOS 13.0, *) {
-            configurationViewController.presentationController?.delegate = self
-            present(configurationViewController, animated: true, completion: nil)
+            presentInNavigationController(configurationViewController, delegate: self)
         } else {
             navigationController?.delegate = self
             navigationController?.pushViewController(configurationViewController, animated: true)
@@ -192,7 +191,7 @@ public final class ViewDebuggerViewController: UIViewController, UIAdaptivePrese
     private func showObjectInspector(_ sender: UIButton) {
         let inspectorVC = ObjectInspectorTableViewController(snapshot: containerView.selectedView!)
         if #available(iOS 13.0, *) {
-            present(inspectorVC, animated: true, completion: nil)
+            presentInNavigationController(inspectorVC)
         } else {
             navigationController?.pushViewController(inspectorVC, animated: true)
         }
@@ -205,10 +204,30 @@ public final class ViewDebuggerViewController: UIViewController, UIAdaptivePrese
     @objc
     private func showViewHierachy(_ sender: UIButton) {
         if #available(iOS 13.0, *) {
-            present(viewHirearchyTableViewController, animated: true, completion: nil)
+            presentInNavigationController(viewHirearchyTableViewController)
         } else {
             navigationController?.pushViewController(viewHirearchyTableViewController, animated: true)
         }
+    }
+    
+}
+
+extension ViewDebuggerViewController {
+    
+    func presentInNavigationController(_ viewController: UIViewController, delegate: UIAdaptivePresentationControllerDelegate? = nil) {
+        let nav = UINavigationController(rootViewController: viewController)
+        viewController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(hide))
+        if delegate != nil {
+            nav.presentationController?.delegate = self
+        }
+        present(nav, animated: true, completion: nil)
+    }
+
+    @objc
+    private func hide() {
+        presentedViewController?.dismiss(animated: true, completion: { [unowned self] in
+            self.presentationControllerDidDismiss(UIPresentationController(presentedViewController: self, presenting: self.presentingViewController))
+        })
     }
     
 }

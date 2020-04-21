@@ -30,6 +30,7 @@ class ConfigurationTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Settings"
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ConfigurationTableViewController.CellIdentifier)
     }
 

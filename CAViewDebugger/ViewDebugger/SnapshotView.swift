@@ -337,7 +337,9 @@ extension SnapshotView {
             layer.contents = image
             border.lineWidth = 1.0 * UIScreen.main.scale
         }
-                
+        
+        let state = selected
+        selected = state
     }
     
 }
