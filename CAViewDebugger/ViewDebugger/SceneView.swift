@@ -119,13 +119,13 @@ public final class SceneView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var layerSpacing = CGFloat.DefaultSpacing
+    var layerSpacing = CGFloat.defaultSpacing
     private(set) var xPosition = CGFloat.zero
     private(set) var yPosition = CGFloat.zero
     private(set) var zPosition = CGFloat.zero
-    private(set) var yRotation = CGFloat.DefaultYRotation
-    private(set) var xRotation = CGFloat.DefaultXRotation
-    private(set) var scale = CGFloat.DefaultScale
+    private(set) var yRotation = CGFloat.defaultYRotation
+    private(set) var xRotation = CGFloat.defaultXRotation
+    private(set) var scale = CGFloat.defaultScale
     
     /// we use nomal vector (x: 0, y: 0, z: 1) to determine the traversing direction of hit test.
     public var normalVector: simd_float4 {
@@ -229,21 +229,21 @@ public final class SceneView: UIView {
     }
 
     
-    static let DefaultCameraTransform: CATransform3D = {
-        let scale: CGFloat = .DefaultScale
+    static let defaultCameraTransform: CATransform3D = {
+        let scale: CGFloat = .defaultScale
         var transform = CATransform3DIdentity
-        transform.m34 = .DefaultM34 * scale
-        transform = CATransform3DRotate(transform, .DefaultXRotation, 1, 0, 0)
-        let rotate = CATransform3DRotate(transform, .DefaultYRotation, 0, 1, 0)
+        transform.m34 = .defaultM34 * scale
+        transform = CATransform3DRotate(transform, .defaultXRotation, 1, 0, 0)
+        let rotate = CATransform3DRotate(transform, .defaultYRotation, 0, 1, 0)
         return CATransform3DMakeScale(scale, scale, scale) + rotate
     }()
     
     private func setDeaultParas() {
         xPosition = 0
         yPosition = 0
-        yRotation = .DefaultYRotation
-        xRotation = .DefaultXRotation
-        scale = .DefaultScale
+        yRotation = .defaultYRotation
+        xRotation = .defaultXRotation
+        scale = .defaultScale
         layer.anchorPoint = .init(x: 0.5, y: 0.5)
         layerSpacing = 10.0
     }
@@ -251,7 +251,7 @@ public final class SceneView: UIView {
     func setCamera() {
         setDeaultParas()
         let animation = CABasicAnimation(keyPath: #keyPath(CALayer.sublayerTransform))
-        animation.toValue = SceneView.DefaultCameraTransform
+        animation.toValue = SceneView.defaultCameraTransform
         animation.duration = 0.3
         animation.delegate = self
         animation.fillMode = .forwards
@@ -322,11 +322,11 @@ public final class SceneView: UIView {
 }
 
 extension CGFloat {
-    fileprivate static let DefaultM34 = CGFloat(-1 / 2000)
-    fileprivate static let DefaultSpacing = CGFloat(10)
-    fileprivate static let DefaultScale = CGFloat(0.6)
-    fileprivate static let DefaultYRotation = CGFloat.pi / 6
-    fileprivate static let DefaultXRotation = -CGFloat.pi * 0.2
+    fileprivate static let defaultM34 = CGFloat(-1 / 2000)
+    fileprivate static let defaultSpacing = CGFloat(10)
+    fileprivate static let defaultScale = CGFloat(0.6)
+    fileprivate static let defaultYRotation = CGFloat.pi / 6
+    fileprivate static let defaultXRotation = -CGFloat.pi * 0.2
 }
 
 extension SceneView: CAAnimationDelegate {
