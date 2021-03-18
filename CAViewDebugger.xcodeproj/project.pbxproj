@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B92C9982603602100144989 /* CAViewDebugger.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 2B92C9972603602100144989 /* CAViewDebugger.podspec */; };
 		E44A4755243C1032003787A8 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44A4754243C1032003787A8 /* Configuration.swift */; };
 		E44A4757243D5A7C003787A8 /* ConfigurationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44A4756243D5A7C003787A8 /* ConfigurationTableViewController.swift */; };
 		E44A4759243EAC9C003787A8 /* ObjectInspectorTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44A4758243EAC9C003787A8 /* ObjectInspectorTableViewController.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2B92C9972603602100144989 /* CAViewDebugger.podspec */ = {isa = PBXFileReference; lastKnownFileType = file; path = CAViewDebugger.podspec; sourceTree = SOURCE_ROOT; };
 		E44A4754243C1032003787A8 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		E44A4756243D5A7C003787A8 /* ConfigurationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationTableViewController.swift; sourceTree = "<group>"; };
 		E44A4758243EAC9C003787A8 /* ObjectInspectorTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectInspectorTableViewController.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 				E44A4758243EAC9C003787A8 /* ObjectInspectorTableViewController.swift */,
 				E44A475A243EACD5003787A8 /* ObjectInspectorDatasource.swift */,
 				E454478324443C3500A979F2 /* ViewHierarchyTableViewController.swift */,
+				2B92C9972603602100144989 /* CAViewDebugger.podspec */,
 				E4BEE5C12438A55C00F46E0F /* Assets.xcassets */,
 			);
 			path = ViewDebugger;
@@ -132,11 +135,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = LuoHuanyu;
 				TargetAttributes = {
 					E44C2EA0242CDAA500D5F4B0 = {
 						CreatedOnToolsVersion = 11.3.1;
+						LastSwiftMigration = 1240;
 					};
 				};
 			};
@@ -166,6 +170,7 @@
 				E44C2EB1242CDAA700D5F4B0 /* LaunchScreen.storyboard in Resources */,
 				E44C2EAE242CDAA700D5F4B0 /* Assets.xcassets in Resources */,
 				E4BEE5C22438A55C00F46E0F /* Assets.xcassets in Resources */,
+				2B92C9982603602100144989 /* CAViewDebugger.podspec in Resources */,
 				E44C2EAC242CDAA500D5F4B0 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -240,6 +245,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -271,6 +277,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -300,6 +307,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -324,6 +332,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -336,7 +345,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = CAViewDebugger/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -357,7 +366,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = CAViewDebugger/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc
+@objcMembers
 public final class ViewDebuggerViewController: UIViewController, UIAdaptivePresentationControllerDelegate, UINavigationControllerDelegate {
     
     private let containerView: SceneView!
