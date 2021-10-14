@@ -9,7 +9,7 @@
 import UIKit
 import simd
 
-public protocol SceneViewDelgate: class {
+public protocol SceneViewDelgate: AnyObject {
     func sceneView(_ view: SceneView, didSelect snapshot: SnapshotView?)
     func sceneView(_ view: SceneView, didFocus snapshot: SnapshotView?)
 }

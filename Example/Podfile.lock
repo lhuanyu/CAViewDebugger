@@ -1,0 +1,16 @@
+PODS:
+  - CAViewDebugger (1.0.0)
+
+DEPENDENCIES:
+  - CAViewDebugger (from `../`)
+
+EXTERNAL SOURCES:
+  CAViewDebugger:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  CAViewDebugger: 3bfbd9fe3c6400e27a816ca2c3d15b425b24a58f
+
+PODFILE CHECKSUM: d1df07676e89725ae8159327b1739f406d590b2c
+
+COCOAPODS: 1.8.4

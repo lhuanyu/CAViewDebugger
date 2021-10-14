@@ -408,7 +408,12 @@ extension UIView {
 extension UIImage {
     
     static func bundleImage(named name: String) -> UIImage? {
-        return UIImage(named: name, in: Bundle(for: SnapshotView.self), compatibleWith: nil)
+        let frameworkBundle = Bundle(for: SnapshotView.self)
+        guard let path = frameworkBundle.path(forResource: "CAViewDebugger", ofType: "bundle") else {
+            return nil
+        }
+        let bundle = Bundle(path: path)
+        return UIImage(named: name, in: bundle, compatibleWith: nil)
     }
     
 }
